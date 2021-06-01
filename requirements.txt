@@ -1,0 +1,12 @@
+discord[voice]
+asyncio
+datetime
+requests
+youtube_dl
+bs4
+psutil
+selenium
+ffmpeg
+PyNaCl
+Flask
+pysqlite3
