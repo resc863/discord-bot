@@ -19,7 +19,7 @@ with open("/home/ubuntu/token.txt", "r") as f:
     token = f.read()
     #token
 
-with open('D:/list.json', 'r') as f:
+with open('/home/ubuntu/list.json', 'r') as f:
     json_data = json.load(f)
 
 schcode = ""
@@ -37,7 +37,7 @@ def weatherinfo(location):
     return data
 
 def yt(name):
-    with open('D:/key.json', 'r') as f:
+    with open('/home/ubuntu/key.json', 'r') as f:
         yt_key = json.load(f)
     url = "https://www.googleapis.com/youtube/v3/search"
     params = {
