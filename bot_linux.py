@@ -18,7 +18,6 @@ bot = commands.Bot(command_prefix="!")
 
 token = os.environ['token']
 print(token)
-yt_key = os.environ['yt_key']
 
 with open('list.json', 'r') as f:
     json_data = json.load(f)
@@ -40,11 +39,10 @@ def weatherinfo(location):
 
 
 def yt(name):
-    with open('/home/ubuntu/key.json', 'r') as f:
-        yt_key = json.load(f)
+    yt_key = os.environ['yt_key']
     url = "https://www.googleapis.com/youtube/v3/search"
     params = {
-        'key': yt_key['yt_key'],
+        'key': yt_key,
         'q': name,
         'part': 'snippet',
         'maxResults': 5
