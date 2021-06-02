@@ -1,4 +1,4 @@
-import asyncio, discord
+import discord
 import random, datetime
 import requests, re
 import youtube_dl, ffmpeg
