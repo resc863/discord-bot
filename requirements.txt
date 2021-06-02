@@ -1,5 +1,4 @@
 discord
-asyncio
 datetime
 requests
 youtube_dl
