@@ -32,60 +32,59 @@ class MusicChart(commands.Cog):
 		for i in range(25):
 			embed.add_field(name='%3d위: ' % (i + 1), value="%s - %s" % (title[i], song[i]), inline=False)
 
-    	await ctx.message.delete()
-    	await ctx.send(embed=embed)
+		await ctx.message.delete()
+		await ctx.send(embed=embed)
 
-    	embed = discord.Embed(title="멜론 실시간 차트", description="")
+		embed = discord.Embed(title="멜론 실시간 차트", description="")
+		
+		for i in range(25, 50):
+			embed.add_field(name='%3d위: ' % (i + 1), value="%s - %s" % (title[i], song[i]), inline=False)
 
-    	for i in range(25, 50):
-        	embed.add_field(name='%3d위: ' % (i + 1), value="%s - %s" % (title[i], song[i]), inline=False)
-
-    	await ctx.send(embed=embed)
+		await ctx.send(embed=embed)
 
 	@commands.command()
 	async def 빌보드(self, ctx):
 		url = 'https://www.billboard.com/charts/hot-100'
-    	html = requests.get(url)
-    	soup = BeautifulSoup(html.text, 'html.parser')
-
-    	sp = soup.find_all('span', {
-        	'class':
-        	'chart-element__information__song text--truncate color--primary'
+		html = requests.get(url)
+		soup = BeautifulSoup(html.text, 'html.parser')
+		sp = soup.find_all('span', {
+			'class':
+			'chart-element__information__song text--truncate color--primary'
     	})
-    	sp1 = soup.find_all(
-        	'span', {
-            	'class':
-            	'chart-element__information__artist text--truncate color--secondary'
-        	})
 
-    	embed = discord.Embed(title="BillBoard Top 100 Lists", description="")
+		sp1 = soup.find_all(
+			'span', {
+				'class':
+				'chart-element__information__artist text--truncate color--secondary'
+			})
 
-    	for i in range(25):
-        	embed.add_field(name='%3d위: ' % (i + 1), value="%s - %s" % (sp[i].string, sp1[i].string), inline=False)
+		embed = discord.Embed(title="BillBoard Top 100 Lists", description="")
 
-    	await ctx.message.delete()
-    	await ctx.send(embed=embed)
+		for i in range(25):
+			embed.add_field(name='%3d위: ' % (i + 1), value="%s - %s" % (sp[i].string, sp1[i].string), inline=False)
 
-    	embed = discord.Embed(title="BillBoard Top 100 Lists", description="")
+		await ctx.message.delete()
+		await ctx.send(embed=embed)
 
-    	for i in range(25, 50):
-        	embed.add_field(name='%3d위: ' % (i + 1),value="%s - %s" % (sp[i].string, sp1[i].string), inline=False)
+		embed = discord.Embed(title="BillBoard Top 100 Lists", description="")
+		
+		for i in range(25, 50):
+			embed.add_field(name='%3d위: ' % (i + 1),value="%s - %s" % (sp[i].string, sp1[i].string), inline=False)
+			
+		await ctx.send(embed=embed)
+		
+		embed = discord.Embed(title="BillBoard Top 100 Lists", description="")
 
-    	await ctx.send(embed=embed)
+		for i in range(50, 75):
+			embed.add_field(name='%3d위: ' % (i + 1), value="%s - %s" % (sp[i].string, sp1[i].string), inline=False)
+			
+		await ctx.send(embed=embed)
+		
+		embed = discord.Embed(title="BillBoard Top 100 Lists", description="")
+		for i in range(75, 100):
+			embed.add_field(name='%3d위: ' % (i + 1), value="%s - %s" % (sp[i].string, sp1[i].string), inline=False)
 
-    	embed = discord.Embed(title="BillBoard Top 100 Lists", description="")
-
-    	for i in range(50, 75):
-        	embed.add_field(name='%3d위: ' % (i + 1), value="%s - %s" % (sp[i].string, sp1[i].string), inline=False)
-
-    	await ctx.send(embed=embed)
-
-    	embed = discord.Embed(title="BillBoard Top 100 Lists", description="")
-
-    	for i in range(75, 100):
-        	embed.add_field(name='%3d위: ' % (i + 1), value="%s - %s" % (sp[i].string, sp1[i].string), inline=False)
-
-    	await ctx.send(embed=embed)
+		await ctx.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(MusicChart(bot))
