@@ -4,7 +4,9 @@ from bs4 import BeautifulSoup
 from discord.ext import commands
 
 class Weather(commands.Cog):
-    
+    def __init__(self, bot):
+        self.bot = bot
+
     def weatherinfo(self, location):
         key = "23fb1206721ca9dd443fbc3f6b4f20ec"
         url = "http://api.openweathermap.org/data/2.5/forecast?q=" + location + "&cnt=10&units=metric&lang=kr&APPID=" + key
@@ -21,7 +23,7 @@ class Weather(commands.Cog):
         request_e = discord.Embed(title="날씨 검색", description=place, color=0xcceeff)
         await ctx.send(embed=request_e)
         await ctx.message.delete()
-        location1 = await bot.wait_for('message', timeout=15.0)
+        location1 = await self.bot.wait_for('message', timeout=15.0)
         location = str(location1.content)
         await location1.delete()
         data = self.weatherinfo(location)

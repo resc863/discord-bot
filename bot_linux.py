@@ -163,7 +163,7 @@ async def 서버정보(ctx):
 @bot.command()
 async def 추방(ctx):
     """Kick a Member"""
-    if not ctx.author.permission_in.kick_members:
+    if not ctx.author.permissions_in(ctx.channel).kick_members:
         ans = discord.Embed(title="Access Denied", description="You don't have permission for it.", color=0xcceeff)
         await ctx.send(embed=ans)
         return
