@@ -1,11 +1,11 @@
 # Discord Bot
 Discord Bot made by resc863.    
 
-##Feature  
-###Play Music on your voice channel  
+## Feature  
+### Play Music on your voice channel  
 You can hear some music with your friends while talking with them    
 
-###Get Music Chart  
+### Get Music Chart  
   
   
 More is coming soon!
