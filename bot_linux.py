@@ -31,16 +31,6 @@ playing = {}
 reaction_id = ""
 cnt = 0
 
-
-def weatherinfo(location):
-    key = "23fb1206721ca9dd443fbc3f6b4f20ec"
-    url = "http://api.openweathermap.org/data/2.5/forecast?q=" + location + "&cnt=10&units=metric&lang=kr&APPID=" + key
-
-    html = requests.get(url).text
-    data = json.loads(html)
-
-    return data
-
 def stid(name, n):
     key = "0XeO7nbthbiRoMUkYGGah20%2BfXizwc0A6BfjrkL6qhh2%2Fsl8j9PzfSLGKnqR%2F1v%2F%2B6AunxntpLfoB3Ryd3OInQ%3D%3D"
     name = urllib.parse.quote(name)
@@ -173,7 +163,7 @@ async def 서버정보(ctx):
 @bot.command()
 async def 추방(ctx):
     """Kick a Member"""
-    if not ctx.member.permission_in.kick_members:
+    if not ctx.author.permission_in.kick_members:
         ans = discord.Embed(title="Access Denied", description="You don't have permission for it.", color=0xcceeff)
         await ctx.send(embed=ans)
         return
@@ -497,9 +487,13 @@ async def 버스(ctx):
     await ctx.send(embed=embed)
 
 @bot.command()
-@bot.is_owner()
 async def load(ctx, *, cog: str):
     """Command which Loads a Module."""
+
+    if not bot.is_owner(ctx.author):
+        ans = discord.Embed(title="Access Denied", description="You don't have permission for it.", color=0xcceeff)
+        await ctx.send(embed=ans)
+        return
 
     try:
         bot.load_extension("Cog."+cog)
@@ -509,9 +503,13 @@ async def load(ctx, *, cog: str):
         await ctx.send('**`SUCCESS`**')
 
 @bot.command()
-@bot.is_owner()
 async def unload(ctx, *, cog: str):
     """Command which Unloads a Module."""
+
+    if not bot.is_owner(ctx.author):
+        ans = discord.Embed(title="Access Denied", description="You don't have permission for it.", color=0xcceeff)
+        await ctx.send(embed=ans)
+        return
 
     try:
         bot.unload_extension("Cog."+cog)
@@ -521,9 +519,13 @@ async def unload(ctx, *, cog: str):
         await ctx.send('**`SUCCESS`**')
 
 @bot.command()
-@bot.is_owner()
 async def reload(ctx, *, cog: str):
     """Command which Reloads a Module."""
+
+    if not bot.is_owner(ctx.author):
+        ans = discord.Embed(title="Access Denied", description="You don't have permission for it.", color=0xcceeff)
+        await ctx.send(embed=ans)
+        return
 
     try:
         bot.unload_extension("Cog."+cog)
