@@ -286,7 +286,7 @@ class Music(commands.Cog):
     @commands.command(name='join', invoke_without_subcommand=True)
     async def _join(self, ctx: commands.Context):
         """Joins a voice channel."""
-        
+
         await ctx.message.delete()
         destination = ctx.author.voice.channel
         if ctx.voice_state.voice:
@@ -481,7 +481,6 @@ class Music(commands.Cog):
         async with ctx.typing():
             try:
                 source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop)
-                await ctx.message.delete()
             except YTDLError as e:
                 await ctx.send('An error occurred while processing this request: {}'.format(str(e)))
                 await ctx.message.delete()
