@@ -44,7 +44,7 @@ class MusicChart(commands.Cog):
 
 	@commands.command()
 	async def 빌보드(self, ctx):
-    	url = 'https://www.billboard.com/charts/hot-100'
+		url = 'https://www.billboard.com/charts/hot-100'
     	html = requests.get(url)
     	soup = BeautifulSoup(html.text, 'html.parser')
 
