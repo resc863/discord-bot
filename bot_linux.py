@@ -240,24 +240,6 @@ async def 시간(ctx):
     await ctx.message.delete()
     await ctx.send(embed=embed)
 
-
-@bot.command()
-async def 자기소개(ctx):
-    if not bot.is_owner(ctx.author):
-        ans = discord.Embed(title="Access Denied", description="You don't have permission for it.", color=0xcceeff)
-        await ctx.send(embed=ans)
-        return
-        
-    embed = discord.Embed(title="반갑습네다 동무들",
-                          description="이곳은 신사들의 공간입네다.",
-                          color=0x620fc7)
-    embed.set_author(name="Lv.99 BOSS",
-                     icon_url="https://imgur.com/vqJlpIT.png")
-    embed.set_thumbnail(url="https://imgur.com/4Y0toA1.png")
-    embed.set_footer(text="서버 부스터에게는 VIP 권한을 드립니다.")
-    await ctx.message.delete()
-    await ctx.send(embed=embed)
-
 @bot.command()
 async def 급식(ctx):
     place = '학교명을 입력하세요'
