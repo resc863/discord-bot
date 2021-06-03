@@ -286,7 +286,8 @@ class Music(commands.Cog):
     @commands.command(name='join', invoke_without_subcommand=True)
     async def _join(self, ctx: commands.Context):
         """Joins a voice channel."""
-
+        
+        await ctx.message.delete()
         destination = ctx.author.voice.channel
         if ctx.voice_state.voice:
             await ctx.voice_state.voice.move_to(destination)
@@ -301,6 +302,7 @@ class Music(commands.Cog):
 
         If no channel was specified, it joins your channel.
         """
+        await ctx.message.delete()
 
         if not channel and not ctx.author.voice:
             raise VoiceError('You are neither connected to a voice channel nor specified a channel to join.')
@@ -316,6 +318,7 @@ class Music(commands.Cog):
     @commands.has_permissions(manage_guild=True)
     async def _leave(self, ctx: commands.Context):
         """Clears the queue and leaves the voice channel."""
+        await ctx.message.delete()
 
         if not ctx.voice_state.voice:
             return await ctx.send('Not connected to any voice channel.')
@@ -326,6 +329,7 @@ class Music(commands.Cog):
     @commands.command(name='volume')
     async def _volume(self, ctx: commands.Context, *, volume: int):
         """Sets the volume of the player."""
+        await ctx.message.delete()
 
         if not ctx.voice_state.is_playing:
             return await ctx.send('Nothing being played at the moment.')
@@ -340,6 +344,7 @@ class Music(commands.Cog):
     async def _now(self, ctx: commands.Context):
         """Displays the currently playing song."""
 
+        await ctx.message.delete()
         await ctx.send(embed=ctx.voice_state.current.create_embed())
 
     @commands.command(name='pause')
@@ -427,6 +432,7 @@ class Music(commands.Cog):
         """Shuffles the queue."""
 
         if len(ctx.voice_state.songs) == 0:
+            await ctx.message.delete()
             return await ctx.send('Empty queue.')
 
         ctx.voice_state.songs.shuffle()
@@ -437,6 +443,7 @@ class Music(commands.Cog):
         """Removes a song from the queue at a given index."""
 
         if len(ctx.voice_state.songs) == 0:
+            await ctx.message.delete()
             return await ctx.send('Empty queue.')
 
         ctx.voice_state.songs.remove(index - 1)
@@ -450,6 +457,7 @@ class Music(commands.Cog):
         """
 
         if not ctx.voice_state.is_playing:
+            await ctx.message.delete()
             return await ctx.send('Nothing being played at the moment.')
 
         # Inverse boolean value to loop and unloop.
@@ -473,10 +481,13 @@ class Music(commands.Cog):
         async with ctx.typing():
             try:
                 source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop)
+                await ctx.message.delete()
             except YTDLError as e:
                 await ctx.send('An error occurred while processing this request: {}'.format(str(e)))
+                await ctx.message.delete()
             else:
                 song = Song(source)
+                await ctx.message.delete()
 
                 await ctx.voice_state.songs.put(song)
                 await ctx.send('Enqueued {}'.format(str(source)))
