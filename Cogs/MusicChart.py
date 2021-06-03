@@ -8,6 +8,9 @@ class MusicChart(commands.Cog):
 
 	@commands.command()
 	async def 멜론(self, ctx):
+		"""
+		Show Melon Music Chart 1 to 100
+		"""
 		header = {
         		'User-Agent':
         		'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko'
@@ -43,7 +46,10 @@ class MusicChart(commands.Cog):
 		await ctx.send(embed=embed)
 
 	@commands.command()
-	async def 빌보드(self, ctx):
+	async def billboard(self, ctx):
+		"""
+		Show BillBoard Music Chart 1 to 100
+		"""
 		url = 'https://www.billboard.com/charts/hot-100'
 		html = requests.get(url)
 		soup = BeautifulSoup(html.text, 'html.parser')

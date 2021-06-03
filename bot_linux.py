@@ -141,7 +141,14 @@ async def 인텔(ctx):
 
 @bot.command()
 async def 서버정보(ctx):
-    """Shows Server's Info"""
+    """Shows Server's Info
+    
+    It shows
+    Server owner
+    Sever location
+    Server member's count
+    Server's date of birth
+    """
     embed = discord.Embed(title=ctx.guild.name + " 정보", description="")
     embed.add_field(name='서버 위치: ', value=ctx.guild.region, inline=False)
     try:
@@ -162,7 +169,10 @@ async def 서버정보(ctx):
 
 @bot.command()
 async def 추방(ctx):
-    """Kick a Member"""
+    """Kick a Member
+    
+    Only for Authorized Personal
+    """
     if not ctx.author.permissions_in(ctx.channel).kick_members:
         ans = discord.Embed(title="Access Denied", description="You don't have permission for it.", color=0xcceeff)
         await ctx.send(embed=ans)
@@ -297,7 +307,12 @@ async def 급식(ctx):
 
 @bot.command()
 async def 서버상태(ctx):
-    """Show server's status"""
+    """Show server's status
+    
+    It shows
+    Server's CPU Usage
+    Server's RAM Usage
+    """
 
     embed = discord.Embed(title="현재 서버 상태")
     cpu = str(psutil.cpu_percent())

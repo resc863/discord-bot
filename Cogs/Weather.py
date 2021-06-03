@@ -18,7 +18,12 @@ class Weather(commands.Cog):
 
     @commands.command()
     async def 날씨(self, ctx):
-        """Show you weather info"""
+        """Show you weather info
+        
+        Insert your correct location.
+        해운대 -> X
+        해운대구 -> O
+        """
         place = '지역을 입력하세요'
         request_e = discord.Embed(title="날씨 검색", description=place, color=0xcceeff)
         await ctx.send(embed=request_e)
