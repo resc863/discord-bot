@@ -14,8 +14,7 @@ class MusicChart(commands.Cog):
     		}
 		melon = requests.get('https://www.melon.com/chart/index.htm', headers=header)  # 멜론차트 웹사이트
 		html = melon.text
-    	parse = BeautifulSoup(html, 'html.parser')
-
+		parse = BeautifulSoup(html, 'html.parser')
    		titles = parse.find_all("div", {"class": "ellipsis rank01"})
     	songs = parse.find_all("div", {"class": "ellipsis rank02"})
 
