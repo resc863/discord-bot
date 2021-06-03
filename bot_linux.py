@@ -41,33 +41,6 @@ def weatherinfo(location):
 
     return data
 
-
-def yt(name):
-    yt_key = os.environ['yt_key']
-    url = "https://www.googleapis.com/youtube/v3/search"
-    params = {
-        'key': yt_key,
-        'q': name,
-        'part': 'snippet',
-        'maxResults': 5
-    }
-
-    html = requests.get(url, params=params).json()
-    items = html['items']
-
-    result = []
-
-    for i in items:
-        title = i['snippet']['title']
-        tag = i['id']['videoId']
-
-        result1 = {"title": title, "tag": tag}
-
-        result.append(result1)
-
-    return result
-
-
 def stid(name, n):
     key = "0XeO7nbthbiRoMUkYGGah20%2BfXizwc0A6BfjrkL6qhh2%2Fsl8j9PzfSLGKnqR%2F1v%2F%2B6AunxntpLfoB3Ryd3OInQ%3D%3D"
     name = urllib.parse.quote(name)
@@ -178,6 +151,7 @@ async def 인텔(ctx):
 
 @bot.command()
 async def 서버정보(ctx):
+    """Shows Server's Info"""
     embed = discord.Embed(title=ctx.guild.name + " 정보", description="")
     embed.add_field(name='서버 위치: ', value=ctx.guild.region, inline=False)
     try:
@@ -198,6 +172,12 @@ async def 서버정보(ctx):
 
 @bot.command()
 async def 추방(ctx):
+    """Kick a Member"""
+    if not ctx.member.permission_in.kick_members:
+        ans = discord.Embed(title="Access Denied", description="You don't have permission for it.", color=0xcceeff)
+        await ctx.send(embed=ans)
+        return
+
     req = '추방 대상을 입력하십시오.'
     ans = discord.Embed(title="Password", description=req, color=0xcceeff)
     await ctx.send(embed=ans)
@@ -231,6 +211,7 @@ async def 역할(ctx):
 
 @bot.command()
 async def DM(ctx):
+    """Send DM to a Member"""
     req = '대상을 입력하십시오.'
     ans = discord.Embed(title="DM", description=req, color=0xcceeff)
     await ctx.send(embed=ans)
@@ -250,6 +231,7 @@ async def DM(ctx):
 
 @bot.command()
 async def 시간(ctx):
+    """Shows time on a Bot Server"""
     now = datetime.datetime.now()
     embed = discord.Embed(title="현재 시각 ", description="지금 시간은")
     embed.set_footer(text=str(now.year) + "년 " + str(now.month) + "월 " +
@@ -323,50 +305,9 @@ async def 급식(ctx):
 
     await ctx.send(embed=embed)
 
-
-@bot.command()
-async def 날씨(ctx):
-    place = '지역을 입력하세요'
-    request_e = discord.Embed(title="날씨 검색", description=place, color=0xcceeff)
-    await ctx.send(embed=request_e)
-    await ctx.message.delete()
-    location1 = await bot.wait_for('message', timeout=15.0)
-    location = str(location1.content)
-    await location1.delete()
-    data = weatherinfo(location)
-
-    name = data['city']['name']
-    weather = data['list']
-
-    print(name)
-
-    for i in weather:
-        embed = discord.Embed(title=location + ' 날씨 정보',
-                              description=location + ' 날씨 정보입니다.',
-                              colour=discord.Colour.gold())
-
-        date = datetime.datetime.fromtimestamp(
-            i['dt']).strftime('%Y-%m-%d %H:%M:%S')
-        print("예보 시각: " + date)
-        embed.add_field(name='예보 시각', value=date, inline=False)
-        temp = i['main']['temp']
-        print("기온: " + str(temp))
-        embed.add_field(name='기온', value=temp, inline=False)
-        feel = i['main']['feels_like']
-        print("체감 기온: " + str(feel))
-        embed.add_field(name='체감 기온', value=feel, inline=False)
-        humidity = i['main']['humidity']
-        print("습도: " + str(humidity))
-        embed.add_field(name='습도', value=humidity, inline=False)
-        cloud = i['weather'][0]['description']
-        print("구름: " + cloud)
-        embed.add_field(name='구름', value=cloud, inline=False)
-        await ctx.send(embed=embed)
-        print("=" * 20)
-
-
 @bot.command()
 async def 서버상태(ctx):
+    """Show server's status"""
 
     embed = discord.Embed(title="현재 서버 상태")
     cpu = str(psutil.cpu_percent())
@@ -555,12 +496,47 @@ async def 버스(ctx):
 
     await ctx.send(embed=embed)
 
+@bot.command()
+@bot.is_owner()
+async def load(ctx, *, cog: str):
+    """Command which Loads a Module."""
+
+    try:
+        bot.load_extension("Cog."+cog)
+    except Exception as e:
+        await ctx.send(f'**`ERROR:`** {type(e).__name__} - {e}')
+    else:
+        await ctx.send('**`SUCCESS`**')
+
+@bot.command()
+@bot.is_owner()
+async def unload(ctx, *, cog: str):
+    """Command which Unloads a Module."""
+
+    try:
+        bot.unload_extension("Cog."+cog)
+    except Exception as e:
+        await ctx.send(f'**`ERROR:`** {type(e).__name__} - {e}')
+    else:
+        await ctx.send('**`SUCCESS`**')
+
+@bot.command()
+@bot.is_owner()
+async def reload(ctx, *, cog: str):
+    """Command which Reloads a Module."""
+
+    try:
+        bot.unload_extension("Cog."+cog)
+        bot.load_extension("Cog."+cog)
+    except Exception as e:
+        await ctx.send(f'**`ERROR:`** {type(e).__name__} - {e}')
+    else:
+        await ctx.send('**`SUCCESS`**')
 
 @bot.event
 async def on_member_join(member):
     await member.create_dm()
     await member.dm_channel.send("반갑습니다 " + member.guild.name + "에 오신것을 환영합니다")
-
 
 @bot.event
 async def on_raw_reaction_add(payload):
