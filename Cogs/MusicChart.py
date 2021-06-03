@@ -88,8 +88,8 @@ class MusicChart(commands.Cog):
 
     	await ctx.send(embed=embed)
 
-def setup(app):
-    app.add_cog(Core(app))
+def setup(bot):
+    bot.add_cog(MusicChart(bot))
 
 
 
