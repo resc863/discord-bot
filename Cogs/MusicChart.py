@@ -15,22 +15,22 @@ class MusicChart(commands.Cog):
 		melon = requests.get('https://www.melon.com/chart/index.htm', headers=header)  # 멜론차트 웹사이트
 		html = melon.text
 		parse = BeautifulSoup(html, 'html.parser')
-   		titles = parse.find_all("div", {"class": "ellipsis rank01"})
-    	songs = parse.find_all("div", {"class": "ellipsis rank02"})
+		titles = parse.find_all("div", {"class": "ellipsis rank01"})
+		songs = parse.find_all("div", {"class": "ellipsis rank02"})
 
-    	title = []
-    	song = []
+		title = []
+		song = []
 
-    	for t in titles:
-        	title.append(t.find('a').text)
+		for t in titles:
+			title.append(t.find('a').text)
 
-    	for s in songs:
-        	song.append(s.find('span', {"class": "checkEllipsis"}).text)
+		for s in songs:
+			song.append(s.find('span', {"class": "checkEllipsis"}).text)
 
-    	embed = discord.Embed(title="멜론 실시간 차트", description="")
+		embed = discord.Embed(title="멜론 실시간 차트", description="")
 
-    	for i in range(25):
-        	embed.add_field(name='%3d위: ' % (i + 1), value="%s - %s" % (title[i], song[i]), inline=False)
+		for i in range(25):
+			embed.add_field(name='%3d위: ' % (i + 1), value="%s - %s" % (title[i], song[i]), inline=False)
 
     	await ctx.message.delete()
     	await ctx.send(embed=embed)
