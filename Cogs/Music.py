@@ -425,6 +425,7 @@ class Music(commands.Cog):
 
         embed = (discord.Embed(description='**{} tracks:**\n\n{}'.format(len(ctx.voice_state.songs), queue))
                  .set_footer(text='Viewing page {}/{}'.format(page, pages)))
+        await ctx.message.delete()
         await ctx.send(embed=embed)
 
     @commands.command(name='shuffle')
