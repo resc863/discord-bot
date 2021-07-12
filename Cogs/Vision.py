@@ -44,7 +44,7 @@ class Vision(commands.Cog):
 					print("Image Detected")
 					result = self.vision(self.image)
 
-					if result == 1:
+					while result == 1:
 						await asyncio.sleep(5)
 						result = self.vision(self.image)
 					
@@ -55,6 +55,8 @@ class Vision(commands.Cog):
 						embed.add_field(name="Racy: ", value=result['racy'], inline=False)
 						await message.delete()
 						await message.channel.send(embed=embed)
+						
+					print("Process Complete")
 				else:
 					continue
 				
