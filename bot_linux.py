@@ -17,7 +17,6 @@ from bs4 import BeautifulSoup  #패키지 설치 필수
 bot = commands.Bot(command_prefix="!")
 
 token = os.environ['token']
-print(token)
 
 with open('list.json', 'r') as f:
     json_data = json.load(f)
