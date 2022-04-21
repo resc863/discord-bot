@@ -2,13 +2,13 @@ from urllib.request import urlopen, Request
 from bs4 import BeautifulSoup
 import urllib
 import requests, re
-import json
+import json, os
 import datetime
 from datetime import date
 
 def eat(today):
-
-    url = "https://open.neis.go.kr/hub/mealServiceDietInfo?KEY=4ff568a5dd3d4b3e918eb4d1478096d7&Type=json&pIndex=1&pSize=100&ATPT_OFCDC_SC_CODE=C10&SD_SCHUL_CODE=7150115&MLSV_YMD="+today
+    key = os.environ['nice']
+    url = "https://open.neis.go.kr/hub/mealServiceDietInfo?KEY="+key+"&Type=json&pIndex=1&pSize=100&ATPT_OFCDC_SC_CODE=C10&SD_SCHUL_CODE=7150115&MLSV_YMD="+today
     js = requests.get(url).text
 
     data = json.loads(js)

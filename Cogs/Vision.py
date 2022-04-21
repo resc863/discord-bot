@@ -8,7 +8,7 @@ class Vision(commands.Cog):
 		self.bot = bot
 
 	def vision(self, img):
-		my_secret = os.environ['key']
+		my_secret = os.environ['gcloud_key']
 		url = "https://vision.googleapis.com/v1/images:annotate"+"?key="+my_secret
 		data = {
   			"requests": [

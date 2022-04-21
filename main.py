@@ -31,7 +31,7 @@ reaction_id = ""
 cnt = 0
 
 def stid(name, n):
-    key = "0XeO7nbthbiRoMUkYGGah20%2BfXizwc0A6BfjrkL6qhh2%2Fsl8j9PzfSLGKnqR%2F1v%2F%2B6AunxntpLfoB3Ryd3OInQ%3D%3D"
+    key = os.environ['bus_key']
     name = urllib.parse.quote(name)
     url = "http://61.43.246.153/openapi-data/service/busanBIMS2/busStop?serviceKey=" + key + "&pageNo=1&numOfRows=10&bstopnm=" + name
     doc = urllib.request.urlopen(url)
@@ -48,7 +48,8 @@ def stid(name, n):
 
 
 def lineid(lineno):
-    lineurl = "http://61.43.246.153/openapi-data/service/busanBIMS2/busInfo?lineno=" + lineno + "&serviceKey=0XeO7nbthbiRoMUkYGGah20%2BfXizwc0A6BfjrkL6qhh2%2Fsl8j9PzfSLGKnqR%2F1v%2F%2B6AunxntpLfoB3Ryd3OInQ%3D%3D"
+    key = os.environ['bus_key']
+    lineurl = "http://61.43.246.153/openapi-data/service/busanBIMS2/busInfo?lineno=" + lineno + "&serviceKey="+key
     lineid2 = urllib.request.urlopen(lineurl)
     lineid1 = BeautifulSoup(lineid2, "html.parser")
     lineid0 = lineid1.find('item')
@@ -58,8 +59,9 @@ def lineid(lineno):
 
 
 def nextstop(no, lineno):
+    key = os.environ['bus_key']
     lineid1 = lineid(lineno)
-    url = "http://61.43.246.153/openapi-data/service/busanBIMS2/busInfoRoute?lineid=" + lineid1 + "&serviceKey=0XeO7nbthbiRoMUkYGGah20%2BfXizwc0A6BfjrkL6qhh2%2Fsl8j9PzfSLGKnqR%2F1v%2F%2B6AunxntpLfoB3Ryd3OInQ%3D%3D"
+    url = "http://61.43.246.153/openapi-data/service/busanBIMS2/busInfoRoute?lineid=" + lineid1 + "&serviceKey="+key
     text = urllib.request.urlopen(url)
     soup = BeautifulSoup(text, "html.parser")
     nextidx = 0
@@ -127,7 +129,7 @@ async def on_ready():
     for i in bot.guilds:
         print(i)
     await bot.change_presence(status=discord.Status.idle,
-                              activity=discord.Game("떼껄룩 바보"))
+                              activity=discord.Game("Loading..."))
 
 
 @bot.command()
@@ -372,7 +374,7 @@ async def 버스(ctx):
     await ctx.send(embed=request_e)
     name = await bot.wait_for('message', timeout=15.0)
     station = str(name.content)
-    key = "0XeO7nbthbiRoMUkYGGah20%2BfXizwc0A6BfjrkL6qhh2%2Fsl8j9PzfSLGKnqR%2F1v%2F%2B6AunxntpLfoB3Ryd3OInQ%3D%3D"
+    key = os.environ['bus_key']
     url = "http://61.43.246.153/openapi-data/service/busanBIMS2/stopArr?serviceKey=" + key + "&bstopid=" + stid(
         station, 1)
     url1 = "http://61.43.246.153/openapi-data/service/busanBIMS2/stopArr?serviceKey=" + key + "&bstopid=" + stid(
