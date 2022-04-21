@@ -6,7 +6,7 @@ Discord Bot made by resc863.
 You can hear some music with your friends while talking with them    
 
 ### Get Music Chart  
-  
+
   
 More is coming soon!
 

@@ -87,7 +87,9 @@ def nextstop(no, lineno):
 
 
 def get_code(school_name):
-    result = {'high': {}}
+    """
+    학교별 고유 코드 가져오기
+    """
     code = ""
 
     headers = {
@@ -243,6 +245,9 @@ async def 시간(ctx):
 
 @bot.command()
 async def 급식(ctx):
+    """
+    입력된 날짜의 학교 급식 가져오기
+    """
     place = '학교명을 입력하세요'
     request_e = discord.Embed(title="Send to Me",
                               description=place,
