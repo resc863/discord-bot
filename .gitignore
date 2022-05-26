@@ -1,2 +1,13 @@
 *.pyc
 __pycache__/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.xlsx
+*.xls
+*.pdf
+*.docs
+*.ppt
+*.pptx
