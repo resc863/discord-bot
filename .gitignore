@@ -1,5 +1,5 @@
-*.pyc
-__pycache__/
+__pycache__/*.pyc
+Cogs/__pycache__/*.pyc
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
