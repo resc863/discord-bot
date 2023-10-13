@@ -1,6 +1,11 @@
 __pycache__/*.pyc
 Cogs/__pycache__/*.pyc
 .vscode/*
+venv/*
+AnythingV5Ink_v5PrtRE.safetensors
+vae-ft-mse-840000-ema-pruned.safetensors
+kl-f8-anime2.ckpt
+stablediffusion.ipynb
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
@@ -11,3 +16,4 @@ Cogs/__pycache__/*.pyc
 *.docs
 *.ppt
 *.pptx
+*.Identifier
