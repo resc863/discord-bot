@@ -14,6 +14,7 @@ class StableDiffusion(commands.Cog):
         self.bot = bot
         self.generator = StableDiffusionPipeline.from_single_file("./AnythingV5Ink_v5PrtRE.safetensors", torch_dtype = torch.float16)
         self.generator.safety_checker = None
+        self.generator.text_encoder.num_hidden_layers = 11
         #generator.vae = AutoencoderKL.from_single_file("./kl-f8-anime2.ckpt", torch_dtype = torch.float16)
         self.generator.vae = AutoencoderKL.from_single_file("./vae-ft-mse-840000-ema-pruned.safetensors", torch_dtype = torch.float16)
         #generator.scheduler = DPMSolverSinglestepScheduler(use_karras_sigmas=True)
@@ -86,6 +87,29 @@ class StableDiffusion(commands.Cog):
             self.generator.scheduler = DPMSolverMultistepScheduler(use_karras_sigmas=False, algorithm_type="sde-dpmsolver++")
         elif scheduler == "normal":
             self.generator.scheduler = PNDMScheduler()
+
+    
+    @commands.command()
+    async def model(self, ctx):
+        embed = discord.Embed(title="Change Model", description="Enter model you want", color=0xcceeff)
+        embed.add_field(name='AnythingV5', value="anythingv5", inline=False)
+        embed.add_field(name='ChilloutMix', value="chilloutmix", inline=False)
+        await ctx.send(embed=embed)
+
+        def check(m):
+            return m.author == ctx.author and m.channel == ctx.channel
+        
+        model = await self.bot.wait_for('message', check=check, timeout=30.0)
+
+        if model == "anythingv5":
+            self.generator = StableDiffusionPipeline.from_single_file("./AnythingV5Ink_v5PrtRE.safetensors", torch_dtype = torch.float16)
+            self.generator.safety_checker = None
+            self.generator.text_encoder.num_hidden_layers = 11
+            self.generator.vae = AutoencoderKL.from_single_file("./vae-ft-mse-840000-ema-pruned.safetensors", torch_dtype = torch.float16)
+        elif model == "chilloutmix":
+            self.generator = StableDiffusionPipeline.from_single_file("./ChilloutMixInk_v5PrtRE.safetensors", torch_dtype = torch.float16)
+            self.generator.safety_checker = None
+            self.generator.text_encoder.num_hidden_layers = 11
 		
 
 async def setup(bot):
