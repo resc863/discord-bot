@@ -6,17 +6,19 @@ import urllib
 import urllib.request
 import bs4
 import os
-import sys, json
-import parser
+import json
 import psutil
 import school_meal
-from discord.ext import commands, tasks
-from urllib.request import urlopen, Request
+from discord.ext import commands
+from urllib.request import urlopen
 from bs4 import BeautifulSoup  #패키지 설치 필수
 
-bot = commands.Bot(command_prefix="!")
+intents = discord.Intents.default()
+intents.message_content = True #requires privileged intents settings from developer portal
 
-token = os.environ['token']
+bot = commands.Bot(command_prefix="!", intents=intents)
+
+token = os.environ["discord_token"]
 
 with open('list.json', 'r') as f:
     json_data = json.load(f)
@@ -137,10 +139,38 @@ async def on_ready():
 @bot.command()
 async def 인텔(ctx):
     with open('intel-logo.jpg', 'rb') as f:
-        picture = discord.File(f)
-        await ctx.message.delete()
-        await ctx.send(file=picture)
+        image = discord.File(f)
+        embed = discord.Embed(title="Here is your image", colour=discord.Colour.gold())
+        embed.set_image(url="attachment://image.png")
+        
+        await ctx.send(embed=embed, file=image)
 
+@bot.command()
+async def test(ctx):
+    await ctx.send("test")
+
+class Dropdown(discord.ui.Select):
+    def __init__(self):
+        options = [
+            discord.SelectOption(label='Option 1', description='Description 1', emoji='🍎'),
+            discord.SelectOption(label='Option 2', description='Description 2', emoji='🍊'),
+            discord.SelectOption(label='Option 3', description='Description 3', emoji='🍇'),
+        ]
+        super().__init__(placeholder='Choose your favorite fruit...', min_values=1, max_values=1, options=options)
+
+    async def callback(self, interaction: discord.Interaction):
+        print(self.values[0])
+        await interaction.response.send_message(f'You selected {self.values[0]}')
+
+class DropdownView(discord.ui.View):
+    def __init__(self):
+        super().__init__()
+        self.add_item(Dropdown())
+
+@bot.command()
+async def select_menu(ctx):
+    view = DropdownView()
+    await ctx.send('Please choose an option:', view=view)        
 
 @bot.command()
 async def 서버정보(ctx):
@@ -153,7 +183,6 @@ async def 서버정보(ctx):
     Server's date of birth
     """
     embed = discord.Embed(title=ctx.guild.name + " 정보", description="")
-    embed.add_field(name='서버 위치: ', value=ctx.guild.region, inline=False)
     try:
         embed.add_field(name='서버 소유자: ',
                         value=ctx.guild.owner.nick,
@@ -495,23 +524,24 @@ async def 버스(ctx):
     await ctx.send(embed=embed)
 
 @bot.command()
-async def load(ctx, *, cog: str):
+async def load(ctx, extension):
     """Command which Loads a Module."""
 
-    if not bot.is_owner(ctx.author):
+    if not (await bot.is_owner(ctx.author)):
         ans = discord.Embed(title="Access Denied", description="You don't have permission for it.", color=0xcceeff)
         await ctx.send(embed=ans)
         return
 
     try:
-        bot.load_extension("Cog."+cog)
+        print("loading "+extension)
+        await bot.load_extension("Cogs."+extension)
     except Exception as e:
         await ctx.send(f'**`ERROR:`** {type(e).__name__} - {e}')
     else:
         await ctx.send('**`SUCCESS`**')
 
 @bot.command()
-async def unload(ctx, *, cog: str):
+async def unload(ctx, extension):
     """Command which Unloads a Module."""
 
     if not bot.is_owner(ctx.author):
@@ -520,14 +550,14 @@ async def unload(ctx, *, cog: str):
         return
 
     try:
-        bot.unload_extension("Cog."+cog)
+        await bot.unload_extension("Cogs."+extension)
     except Exception as e:
         await ctx.send(f'**`ERROR:`** {type(e).__name__} - {e}')
     else:
         await ctx.send('**`SUCCESS`**')
 
 @bot.command()
-async def reload(ctx, *, cog: str):
+async def reload(ctx, extension):
     """Command which Reloads a Module."""
 
     if not bot.is_owner(ctx.author):
@@ -536,8 +566,7 @@ async def reload(ctx, *, cog: str):
         return
 
     try:
-        bot.unload_extension("Cog."+cog)
-        bot.load_extension("Cog."+cog)
+        await bot.reload_extension("Cogs."+extension)
     except Exception as e:
         await ctx.send(f'**`ERROR:`** {type(e).__name__} - {e}')
     else:

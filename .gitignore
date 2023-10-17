@@ -2,9 +2,9 @@ __pycache__/*.pyc
 Cogs/__pycache__/*.pyc
 .vscode/*
 venv/*
-AnythingV5Ink_v5PrtRE.safetensors
-vae-ft-mse-840000-ema-pruned.safetensors
-kl-f8-anime2.ckpt
+*.safetensors
+*.ckpt
+*.pth
 stablediffusion.ipynb
 !.vscode/settings.json
 !.vscode/tasks.json
@@ -17,3 +17,4 @@ stablediffusion.ipynb
 *.ppt
 *.pptx
 *.Identifier
+model/*

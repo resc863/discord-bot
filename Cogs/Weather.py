@@ -62,5 +62,5 @@ class Weather(commands.Cog):
             await ctx.send(embed=embed)
             print("=" * 20)
 
-def setup(bot):
-    bot.add_cog(Weather(bot))
+async def setup(bot):
+    await bot.add_cog(Weather(bot))
