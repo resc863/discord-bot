@@ -5,6 +5,7 @@ venv/*
 *.safetensors
 *.ckpt
 *.pth
+*.pt
 stablediffusion.ipynb
 !.vscode/settings.json
 !.vscode/tasks.json

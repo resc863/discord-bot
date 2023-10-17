@@ -12,11 +12,11 @@ from discord.ext import commands
 class StableDiffusion(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.generator = StableDiffusionPipeline.from_single_file("./AnythingV5Ink_v5PrtRE.safetensors", torch_dtype = torch.float16)
+        self.generator = StableDiffusionPipeline.from_single_file("./model/AnythingV5Ink_v5PrtRE.safetensors", torch_dtype = torch.float16)
         self.generator.safety_checker = None
         self.generator.text_encoder.num_hidden_layers = 11
         #generator.vae = AutoencoderKL.from_single_file("./kl-f8-anime2.ckpt", torch_dtype = torch.float16)
-        self.generator.vae = AutoencoderKL.from_single_file("./vae-ft-mse-840000-ema-pruned.safetensors", torch_dtype = torch.float16)
+        #self.generator.vae = AutoencoderKL.from_single_file("./vae-ft-mse-840000-ema-pruned.safetensors", torch_dtype = torch.float16)
         #generator.scheduler = DPMSolverSinglestepScheduler(use_karras_sigmas=True)
         #generator.scheduler = DPMSolverMultistepScheduler(use_karras_sigmas=True, algorithm_type="sde-dpmsolver++")
         #generator.scheduler = DPMSolverSDEScheduler(use_karras_sigmas=True)
@@ -102,15 +102,35 @@ class StableDiffusion(commands.Cog):
         model = await self.bot.wait_for('message', check=check, timeout=30.0)
 
         if model == "anythingv5":
-            self.generator = StableDiffusionPipeline.from_single_file("./AnythingV5Ink_v5PrtRE.safetensors", torch_dtype = torch.float16)
+            self.generator = StableDiffusionPipeline.from_single_file("./model/AnythingV5Ink_v5PrtRE.safetensors", torch_dtype = torch.float16)
             self.generator.safety_checker = None
             self.generator.text_encoder.num_hidden_layers = 11
-            self.generator.vae = AutoencoderKL.from_single_file("./vae-ft-mse-840000-ema-pruned.safetensors", torch_dtype = torch.float16)
+            self.generator.vae = AutoencoderKL.from_single_file("./vae/vae-ft-mse-840000-ema-pruned.safetensors", torch_dtype = torch.float16)
         elif model == "chilloutmix":
-            self.generator = StableDiffusionPipeline.from_single_file("./ChilloutMixInk_v5PrtRE.safetensors", torch_dtype = torch.float16)
+            self.generator = StableDiffusionPipeline.from_single_file("./model/ChilloutMixInk_v5PrtRE.safetensors", torch_dtype = torch.float16)
             self.generator.safety_checker = None
             self.generator.text_encoder.num_hidden_layers = 11
-		
+        elif model == "nai":
+            self.generator = StableDiffusionPipeline.from_single_file("./model/animefull-latest.ckpt", torch_dtype = torch.float16)
+            self.generator.safety_checker = None
+            self.generator.text_encoder.num_hidden_layers = 11
+            self.generator.vae = AutoencoderKL.from_single_file("./vae/animevae.pt", torch_dtype = torch.float16)
+
+    @commands.command()
+    async def lora(self, ctx):
+        embed = discord.Embed(title="Lora", description="Enter lora you want or type unload to disable lora", color=0xcceeff)
+        embed.add_field(name='koreandolllikeness', value="kor", inline=False)
+        await ctx.send(embed=embed)
+
+        def check(m):
+            return m.author == ctx.author and m.channel == ctx.channel
+        
+        model = await self.bot.wait_for('message', check=check, timeout=30.0)
+
+        if model == "kor":
+            self.generator.load_lora_weights("./lora/koreanDollLikeness_v20.safetensors")
+        elif model == "unload":
+            self.generator.unload_lora_weights()
 
 async def setup(bot):
     await bot.add_cog(StableDiffusion(bot)) 
