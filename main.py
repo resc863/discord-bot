@@ -9,11 +9,12 @@ import os
 import json
 import psutil
 import school_meal
-from discord.ext import commands
+from discord import app_commands
+from discord.ext import commands, tasks
 from urllib.request import urlopen
 from bs4 import BeautifulSoup  #패키지 설치 필수
 
-intents = discord.Intents.default()
+intents = discord.Intents.all()
 intents.message_content = True #requires privileged intents settings from developer portal
 
 bot = commands.Bot(command_prefix="!", intents=intents)
@@ -22,10 +23,6 @@ token = os.environ["discord_token"]
 
 with open('list.json', 'r') as f:
     json_data = json.load(f)
-
-for filename in os.listdir("Cogs"): #2
-    if filename.endswith(".py"): #3
-        bot.load_extension(f"Cogs.{filename[:-3]}")
 
 schcode = ""
 playing = {}
@@ -123,31 +120,32 @@ def get_code(school_name):
 
     return code
 
-
 @bot.event
 async def on_ready():
     print("Logged in ")
     print(bot.user.name)
     print(bot.user.id)
     print("===============\n")
+
+    await bot.tree.sync()
+
     for i in bot.guilds:
         print(i)
     await bot.change_presence(status=discord.Status.idle,
                               activity=discord.Game("Loading..."))
 
+@bot.tree.command(name="test", description="test")
+async def test(interaction: discord.Interaction):
+    await interaction.response.send_message("test")
 
-@bot.command()
-async def 인텔(ctx):
+@bot.tree.command(name="인텔", description="인텔 사진")
+async def 인텔(interaction: discord.Interaction):
     with open('intel-logo.jpg', 'rb') as f:
         image = discord.File(f)
         embed = discord.Embed(title="Here is your image", colour=discord.Colour.gold())
         embed.set_image(url="attachment://image.png")
         
-        await ctx.send(embed=embed, file=image)
-
-@bot.command()
-async def test(ctx):
-    await ctx.send("test")
+        await interaction.response.send_message(embed=embed, file=image)
 
 class Dropdown(discord.ui.Select):
     def __init__(self):
@@ -523,54 +521,63 @@ async def 버스(ctx):
 
     await ctx.send(embed=embed)
 
-@bot.command()
-async def load(ctx, extension):
+@bot.tree.command(name="load", description="Load Extention")
+@app_commands.describe(extention="extention")
+async def load(interaction: discord.Interaction, extention:str):
     """Command which Loads a Module."""
 
-    if not (await bot.is_owner(ctx.author)):
+    if not (await bot.is_owner(interaction.user)):
         ans = discord.Embed(title="Access Denied", description="You don't have permission for it.", color=0xcceeff)
-        await ctx.send(embed=ans)
+        await interaction.response.send_message(embed=ans)
         return
 
     try:
-        print("loading "+extension)
-        await bot.load_extension("Cogs."+extension)
+        print("loading "+extention)
+        await bot.load_extension("Cogs."+extention)
     except Exception as e:
-        await ctx.send(f'**`ERROR:`** {type(e).__name__} - {e}')
+        await interaction.response.send_message(f'**`ERROR:`** {type(e).__name__} - {e}')
     else:
-        await ctx.send('**`SUCCESS`**')
+        await interaction.response.send_message('**`SUCCESS`**')
 
-@bot.command()
-async def unload(ctx, extension):
+    await bot.tree.sync()
+
+@bot.tree.command(name="unload", description="Unload Extention")
+@app_commands.describe(extention="extention")
+async def unload(interaction: discord.Interaction, extention:str):
     """Command which Unloads a Module."""
 
-    if not bot.is_owner(ctx.author):
+    if not bot.is_owner(interaction.user):
         ans = discord.Embed(title="Access Denied", description="You don't have permission for it.", color=0xcceeff)
-        await ctx.send(embed=ans)
+        await interaction.response.send_message(embed=ans)
         return
 
     try:
-        await bot.unload_extension("Cogs."+extension)
+        await bot.unload_extension("Cogs."+extention)
     except Exception as e:
-        await ctx.send(f'**`ERROR:`** {type(e).__name__} - {e}')
+        await interaction.response.send_message(f'**`ERROR:`** {type(e).__name__} - {e}')
     else:
-        await ctx.send('**`SUCCESS`**')
+        await interaction.response.send_message('**`SUCCESS`**')
 
-@bot.command()
-async def reload(ctx, extension):
+    await bot.tree.sync()
+
+@bot.tree.command(name="reload", description="Reload Extention")
+@app_commands.describe(extention="extention")
+async def reload(interaction: discord.Interaction, extention:str):
     """Command which Reloads a Module."""
 
-    if not bot.is_owner(ctx.author):
+    if not bot.is_owner(interaction.user):
         ans = discord.Embed(title="Access Denied", description="You don't have permission for it.", color=0xcceeff)
-        await ctx.send(embed=ans)
+        await interaction.response.send_message(embed=ans)
         return
 
     try:
-        await bot.reload_extension("Cogs."+extension)
+        await bot.reload_extension("Cogs."+extention)
     except Exception as e:
-        await ctx.send(f'**`ERROR:`** {type(e).__name__} - {e}')
+        await interaction.response.send_message(f'**`ERROR:`** {type(e).__name__} - {e}')
     else:
-        await ctx.send('**`SUCCESS`**')
+        await interaction.response.send_message('**`SUCCESS`**')
+
+    await bot.tree.sync()
 
 @bot.event
 async def on_member_join(member):

@@ -1,11 +1,16 @@
 import discord, datetime
 import requests, json, os
 from bs4 import BeautifulSoup
+from discord import app_commands
 from discord.ext import commands
 
 class Weather(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+
+    @commands.Cog.listener()
+    async def on_ready(self):
+        print("Weather ready")
 
     def weatherinfo(self, location):
         key = os.environ['weather']
@@ -16,21 +21,16 @@ class Weather(commands.Cog):
 
         return data
 
-    @commands.command()
-    async def 날씨(self, ctx):
+
+    @app_commands.command(name="날씨", description="날씨 예보")
+    @app_commands.describe(location="Location")
+    async def 날씨(self, interaction: discord.Interaction, location:str):
         """Show you weather info
         
         Insert your correct location.
         해운대 -> X
         해운대구 -> O
         """
-        place = '지역을 입력하세요'
-        request_e = discord.Embed(title="날씨 검색", description=place, color=0xcceeff)
-        await ctx.send(embed=request_e)
-        await ctx.message.delete()
-        location1 = await self.bot.wait_for('message', timeout=15.0)
-        location = str(location1.content)
-        await location1.delete()
         data = self.weatherinfo(location)
 
         name = data['city']['name']
@@ -59,7 +59,8 @@ class Weather(commands.Cog):
             cloud = i['weather'][0]['description']
             print("구름: " + cloud)
             embed.add_field(name='구름', value=cloud, inline=False)
-            await ctx.send(embed=embed)
+            
+            await interaction.response.send_message(embed=embed)
             print("=" * 20)
 
 async def setup(bot):
