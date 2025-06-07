@@ -78,6 +78,7 @@ class StableDiffusion(commands.Cog):
             return m.author == ctx.author and m.channel == ctx.channel
         
         scheduler = await self.bot.wait_for('message', check=check, timeout=30.0)
+        scheduler = scheduler.content.strip()
 
         if scheduler == "dpm2mkarras":
             self.generator.scheduler = DPMSolverMultistepScheduler(use_karras_sigmas=True)
@@ -100,6 +101,7 @@ class StableDiffusion(commands.Cog):
             return m.author == ctx.author and m.channel == ctx.channel
         
         model = await self.bot.wait_for('message', check=check, timeout=30.0)
+        model = model.content.strip()
 
         if model == "anythingv5":
             self.generator = StableDiffusionPipeline.from_single_file("./model/AnythingV5Ink_v5PrtRE.safetensors", torch_dtype = torch.float16)
@@ -126,6 +128,7 @@ class StableDiffusion(commands.Cog):
             return m.author == ctx.author and m.channel == ctx.channel
         
         model = await self.bot.wait_for('message', check=check, timeout=30.0)
+        model = model.content.strip()
 
         if model == "kor":
             self.generator.load_lora_weights("./lora/koreanDollLikeness_v20.safetensors")
